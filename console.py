@@ -92,14 +92,43 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         """Creates an instance.
         """
-        if line == "" or line is None:
+        if not line:
             print("** class name missing **")
-        elif line not in storage.classes():
+            return
+
+        args = line.split()
+        class_name = args[0]
+
+        if class_name not in storage.classes():
             print("** class doesn't exist **")
-        else:
-            b = storage.classes()[line]()
-            b.save()
-            print(b.id)
+            return
+
+        params = {}
+        for param in args[1:]:
+            match = re.match(r'(\w+)=(.+)', param)
+            if not match:
+                continue
+
+            key, value = match.groups()
+
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+            elif '.' in value:
+                try:
+                    value = float(value)
+                except ValueError:
+                    continue
+            else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    continue
+
+            params[key] = value
+
+        new_instance = storage.classes()[class_name](**params)
+        new_instance.save()
+        print(new_instance.id)
 
     def do_show(self, line):
         """Prints the string representation of an instance.
