@@ -5,6 +5,7 @@ from models.base_model import BaseModel
 from io import StringIO
 from unittest.mock import patch
 
+
 class TestHBNBCommand(unittest.TestCase):
     def setUp(self):
         """Set up test environment."""
@@ -59,6 +60,7 @@ class TestHBNBCommand(unittest.TestCase):
         cmd = HBNBCommand()
         cmd.onecmd('create NonExistentClass name="Test"')
         self.assertEqual(mock_stdout.getvalue().strip(), "** class doesn't exist **")
+
 
 if __name__ == '__main__':
     unittest.main()
